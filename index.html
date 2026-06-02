@@ -1,0 +1,2166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PackSure AI | AI-Powered Packaging Inspection & Trust Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+:root{
+  /* PackSure AI Colours: Deep Navy + Cyan/Teal + Electric Blue */
+  --blue:#0B6EFD;
+  --blue-light:#3D8EFF;
+  --blue-dim:#0952C6;
+  --blue-dark:#062F8A;
+  --blue-deeper:#041D5C;
+
+  --accent:#00C9C8;
+  --accent-light:#B2F0EF;
+  --accent-dim:#00A8A8;
+
+  --nav-bg:#041D5C;
+  --footer-bg:#030F30;
+
+  --bg-white:#F4F8FF;
+  --bg-light:#EAF1FF;
+  --bg-section:#D6E8FF;
+  --bg-card:#FFFFFF;
+
+  --card-border:rgba(11,110,253,0.18);
+  --card-border-strong:rgba(11,110,253,0.38);
+
+  --text-dark:#08143A;
+  --text-mid:#1A2F6E;
+  --text-muted:#4A5F9E;
+  --text-light:#7A8FC0;
+  --white:#FFFFFF;
+
+  --nav-h:72px;
+  --max-w:1200px;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --display:'Sora',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --ease:cubic-bezier(0.4,0,0.2,1);
+  --ease-out:cubic-bezier(0,0,0.2,1);
+}
+
+body{font-family:var(--font);color:var(--text-dark);background:var(--bg-white);overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg-light);}
+::-webkit-scrollbar-thumb{background:var(--blue);border-radius:2px;}
+img{display:block;max-width:100%;}
+
+/* ─── NAVBAR ─────────────────────────── */
+.navbar{
+  position:fixed;top:0;left:0;width:100%;height:var(--nav-h);
+  background:var(--nav-bg);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(0,201,200,0.18);
+  z-index:1000;display:flex;align-items:center;
+  padding:0 clamp(16px,5vw,60px);
+  justify-content:space-between;
+  transition:border-color 0.3s;
+  box-shadow:0 2px 24px rgba(4,29,92,0.6);
+}
+.nav-logo{
+  font-family:var(--display);font-size:18px;font-weight:800;
+  color:var(--white);letter-spacing:-0.3px;
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;text-decoration:none;flex-shrink:0;
+}
+.nav-logo-icon{
+  width:40px;height:40px;
+  background:rgba(0,201,200,0.18);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 4px 14px rgba(0,201,200,0.2);
+  border:1px solid rgba(0,201,200,0.3);
+}
+.nav-logo-icon svg{width:22px;height:22px;fill:none;stroke:#00C9C8;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.nav-logo-text{display:flex;flex-direction:column;line-height:1;}
+.nav-logo-text span{font-size:10px;font-family:var(--mono);font-weight:500;color:rgba(0,201,200,0.8);letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
+
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none;}
+.nav-links li button{
+  background:none;border:none;
+  color:rgba(255,255,255,0.85);
+  font-size:11px;font-weight:600;
+  padding:8px 14px;border-radius:7px;
+  transition:all 0.22s var(--ease);
+  cursor:pointer;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;
+  position:relative;white-space:nowrap;
+}
+.nav-links li button:hover{color:#fff;background:rgba(0,201,200,0.15);}
+.nav-links li button.active{color:#fff;background:rgba(0,201,200,0.18);}
+.nav-links li button.active::after{
+  content:'';position:absolute;bottom:5px;left:50%;
+  transform:translateX(-50%);width:14px;height:2px;
+  background:var(--accent);border-radius:2px;
+}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn-demo-nav{
+  background:var(--accent);
+  color:var(--blue-deeper);border:none;padding:9px 20px;border-radius:8px;
+  font-size:11px;font-weight:700;cursor:pointer;
+  transition:all 0.22s;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;white-space:nowrap;
+  box-shadow:0 2px 10px rgba(0,201,200,0.3);
+}
+.btn-demo-nav:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,201,200,0.5);}
+
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;flex-shrink:0;}
+.hamburger span{width:22px;height:2px;background:#fff;border-radius:2px;transition:0.3s;display:block;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+.mobile-nav{
+  display:none;position:fixed;top:var(--nav-h);left:0;width:100%;
+  background:var(--blue-deeper);backdrop-filter:blur(20px);
+  padding:12px 20px 20px;flex-direction:column;gap:2px;
+  z-index:999;border-bottom:1px solid rgba(0,201,200,0.15);
+  animation:slideDown 0.25s var(--ease-out);
+}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.mobile-nav.open{display:flex;}
+.mobile-nav button{
+  background:none;border:none;color:rgba(255,255,255,0.8);
+  font-size:13px;font-weight:600;padding:13px 12px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  cursor:pointer;font-family:var(--mono);text-align:left;
+  text-transform:uppercase;letter-spacing:1px;
+  transition:color 0.2s,background 0.2s;border-radius:6px;
+}
+.mobile-nav button:hover{color:#fff;background:rgba(0,201,200,0.12);}
+.mobile-nav .mob-cta{
+  margin-top:8px;background:var(--accent);
+  color:var(--blue-deeper);border:none;padding:13px;
+  border-radius:8px;font-weight:700;font-size:12px;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;
+  font-family:var(--mono);
+}
+
+/* ─── PAGE SYSTEM ─────────────────── */
+.page{display:none;min-height:100vh;padding-top:var(--nav-h);}
+.page.active{display:block;animation:pgIn 0.35s var(--ease);}
+@keyframes pgIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ─── SECTION COMMONS ─────────────── */
+.label-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--blue-dim);margin-bottom:14px;
+}
+.label-tag::before{content:'';width:20px;height:1px;background:var(--blue);}
+.label-tag-white{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;
+  color:rgba(0,201,200,0.9);margin-bottom:14px;
+}
+.label-tag-white::before{content:'';width:20px;height:1px;background:rgba(0,201,200,0.7);}
+
+.section-h2{
+  font-family:var(--display);font-size:clamp(28px,3.5vw,52px);
+  font-weight:800;line-height:1.1;letter-spacing:-0.8px;
+  margin-bottom:10px;
+}
+.section-h2.blue-txt{color:var(--blue-dark);}
+.section-h2.dark{color:var(--text-dark);}
+.section-h2.white{color:var(--white);}
+
+.section-divider{width:56px;height:3px;margin:16px 0 28px;border-radius:2px;}
+.divider-blue{background:linear-gradient(90deg,var(--blue),transparent);}
+.divider-cyan{background:linear-gradient(90deg,var(--accent),transparent);}
+.divider-white{background:linear-gradient(90deg,rgba(0,201,200,0.8),transparent);}
+.divider-center{margin:16px auto 28px;}
+
+.para-dark{color:var(--text-mid);line-height:1.85;font-size:17px;}
+.para-light{color:rgba(255,255,255,0.85);line-height:1.85;font-size:17px;}
+
+.container{max-width:var(--max-w);margin:0 auto;padding:0 clamp(16px,4vw,60px);}
+
+/* ─── BUTTONS ─────────────────────── */
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--blue),var(--blue-dark));
+  color:var(--white);padding:13px 28px;border-radius:8px;
+  text-decoration:none;font-weight:700;font-size:12px;
+  letter-spacing:0.8px;text-transform:uppercase;
+  transition:all 0.25s;font-family:var(--mono);border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(11,110,253,0.35);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(11,110,253,0.5);}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1.5px solid var(--blue);color:var(--blue-dark);
+  padding:12px 28px;border-radius:8px;text-decoration:none;
+  font-weight:700;font-size:12px;letter-spacing:0.8px;
+  text-transform:uppercase;transition:all 0.25s;
+  font-family:var(--mono);background:none;cursor:pointer;
+}
+.btn-secondary:hover{background:rgba(11,110,253,0.08);border-color:var(--blue-dim);}
+.btn-white{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--white);color:var(--blue-dark);
+  padding:12px 28px;border-radius:8px;
+  font-weight:700;font-size:12px;letter-spacing:0.8px;
+  text-transform:uppercase;transition:all 0.25s;
+  font-family:var(--mono);border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(0,0,0,0.12);
+}
+.btn-white:hover{transform:translateY(-2px);background:var(--accent-light);box-shadow:0 8px 28px rgba(0,0,0,0.2);}
+
+/* ─── STATUS BADGES ─────────────────── */
+.risk-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:20px;
+  font-size:10px;font-weight:700;font-family:var(--mono);letter-spacing:0.5px;
+}
+.risk-blue{background:rgba(11,110,253,0.1);color:var(--blue-dim);border:1px solid rgba(11,110,253,0.28);}
+.risk-light{background:rgba(0,201,200,0.12);color:var(--blue-dark);border:1px solid rgba(0,201,200,0.3);}
+.risk-green{background:rgba(16,185,129,0.1);color:#059669;border:1px solid rgba(16,185,129,0.25);}
+.risk-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
+/* ─── HERO ─────────────────────────── */
+.hero{
+  background:linear-gradient(140deg,#EAF1FF 0%,#D6E8FF 40%,#B2F0EF 100%);
+  padding:clamp(60px,10vw,100px) 0 clamp(50px,8vw,80px);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-80px;right:-80px;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(11,110,253,0.12) 0%,transparent 70%);
+}
+.hero-inner{
+  max-width:var(--max-w);margin:0 auto;
+  padding:0 clamp(16px,4vw,60px);
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,80px);
+  align-items:center;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(11,110,253,0.12);border:1px solid rgba(11,110,253,0.3);
+  border-radius:30px;padding:6px 16px;
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  color:var(--blue-dim);letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:22px;
+}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+h1{
+  font-family:var(--display);font-size:clamp(34px,5vw,64px);
+  font-weight:800;line-height:1.06;letter-spacing:-1.5px;color:var(--text-dark);
+  margin-bottom:6px;
+}
+h1 .blue{color:var(--blue);}
+h1 .cyan{color:var(--accent-dim);}
+.hero-rule{width:48px;height:3px;background:linear-gradient(90deg,var(--blue),var(--accent));border-radius:2px;margin:20px 0;}
+.hero-body{font-size:17px;color:var(--text-mid);line-height:1.8;margin-bottom:28px;max-width:540px;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
+
+.hero-mini-stats{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;}
+.hero-mini-card{
+  background:rgba(255,255,255,0.8);
+  border:1px solid rgba(11,110,253,0.2);
+  border-radius:12px;padding:14px 18px;min-width:140px;
+  backdrop-filter:blur(8px);
+}
+.hero-mini-card strong{
+  display:block;font-family:var(--display);
+  font-size:22px;font-weight:800;color:var(--blue-dark);
+}
+.hero-mini-card span{font-size:11px;color:var(--text-muted);font-family:var(--mono);}
+
+/* DASHBOARD CARD */
+.score-card{
+  background:#fff;border-radius:18px;
+  border:1px solid rgba(11,110,253,0.18);
+  padding:24px;box-shadow:0 8px 40px rgba(11,110,253,0.12);
+}
+.score-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;}
+.score-card-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+.dashboard-title{font-family:var(--display);font-size:17px;font-weight:700;color:var(--text-dark);}
+.live-dot-wrap{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;font-weight:700;color:var(--accent-dim);letter-spacing:1.5px;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 1.5s infinite;}
+.score-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(11,110,253,0.08);}
+.score-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;font-weight:700;flex-shrink:0;}
+.score-icon.blue-bg{background:rgba(11,110,253,0.12);color:var(--blue-dim);}
+.score-icon.light-bg{background:rgba(0,201,200,0.12);color:var(--blue-dark);}
+.score-icon.green-bg{background:rgba(16,185,129,0.1);color:#059669;}
+.score-lbl{flex:1;font-size:12px;color:var(--text-muted);}
+.score-val{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text-dark);}
+.score-big{display:flex;align-items:center;gap:16px;margin-top:18px;padding:16px;background:linear-gradient(135deg,rgba(11,110,253,0.08),rgba(0,201,200,0.12));border-radius:12px;border:1px solid rgba(11,110,253,0.15);}
+.score-big-num{font-family:var(--display);font-size:48px;font-weight:800;color:var(--blue);line-height:1;}
+.score-big-info .label{font-size:13px;font-weight:700;color:var(--text-dark);}
+.score-big-info .sub{font-size:11px;color:var(--text-muted);margin-top:3px;font-family:var(--mono);}
+
+/* ─── STATS STRIP ─────────────────── */
+.section-blue{
+  background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue-deeper) 100%);
+  padding:clamp(60px,8vw,96px) 0;
+}
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:48px;
+}
+.stat-card{
+  background:rgba(255,255,255,0.08);border:1px solid rgba(0,201,200,0.2);
+  border-radius:16px;padding:clamp(20px,3vw,30px);
+  text-align:center;transition:transform 0.25s,border-color 0.25s;
+}
+.stat-card:hover{transform:translateY(-4px);border-color:rgba(0,201,200,0.4);}
+.stat-num{font-family:var(--display);font-size:clamp(32px,4vw,48px);font-weight:800;color:var(--accent);margin-bottom:10px;}
+.stat-lbl{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6;}
+
+/* ─── PLATFORM SECTION ─────────────── */
+.platform-section{background:var(--bg-white);padding:clamp(60px,8vw,96px) 0;}
+.platform-sub{max-width:760px;margin-bottom:44px;color:var(--text-mid);}
+.platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+.platform-card{
+  background:#fff;border:1px solid rgba(11,110,253,0.15);
+  border-radius:18px;overflow:hidden;
+  transition:border-color 0.3s,box-shadow 0.3s,transform 0.3s;
+  box-shadow:0 2px 12px rgba(11,110,253,0.06);
+}
+.platform-card:hover{border-color:rgba(11,110,253,0.35);box-shadow:0 12px 40px rgba(11,110,253,0.12);transform:translateY(-3px);}
+.platform-img-wrap{width:100%;height:200px;overflow:hidden;background:linear-gradient(135deg,var(--bg-light),var(--bg-section));display:flex;align-items:center;justify-content:center;}
+.platform-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.platform-img-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;gap:12px;}
+.platform-img-placeholder i{font-size:48px;color:var(--blue);opacity:0.5;}
+.platform-img-placeholder span{font-family:var(--mono);font-size:10px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;}
+.platform-card .inner{padding:24px;}
+.element-badge{
+  display:inline-block;font-family:var(--mono);font-size:9px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--blue);
+  background:rgba(11,110,253,0.1);border-radius:20px;padding:4px 12px;margin-bottom:12px;
+}
+.platform-card h3{font-family:var(--display);font-size:18px;font-weight:700;color:var(--text-dark);margin-bottom:10px;line-height:1.3;}
+.platform-card p{font-size:14px;color:var(--text-muted);line-height:1.7;margin-bottom:16px;}
+.more-text{font-size:13px;color:var(--text-mid);line-height:1.7;margin-bottom:16px;display:none;}
+.platform-card.open .more-text{display:block;}
+.expand-btn{
+  background:none;border:1.5px solid rgba(11,110,253,0.3);
+  color:var(--blue);font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;padding:8px 18px;
+  border-radius:6px;cursor:pointer;transition:all 0.2s;
+}
+.expand-btn:hover{background:rgba(11,110,253,0.08);}
+
+/* ─── WHY SECTION ─────────────────── */
+.why-section{background:var(--bg-light);padding:clamp(60px,8vw,96px) 0;}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:40px;}
+.why-card{
+  background:#fff;border:1px solid rgba(11,110,253,0.12);
+  border-radius:16px;padding:28px;
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+.why-card:hover{border-color:rgba(0,201,200,0.4);box-shadow:0 8px 32px rgba(11,110,253,0.1);}
+.why-icon{
+  width:48px;height:48px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(11,110,253,0.12),rgba(0,201,200,0.12));
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;color:var(--blue);margin-bottom:16px;
+}
+.why-card h4{font-family:var(--display);font-size:17px;font-weight:700;color:var(--text-dark);margin-bottom:10px;}
+.why-card p{font-size:14px;color:var(--text-muted);line-height:1.75;}
+
+/* ─── ABOUT HERO ─────────────────── */
+.about-hero{background:linear-gradient(140deg,#EAF1FF 0%,#D6E8FF 50%,#B2F0EF 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);}
+.section-light{background:var(--bg-white);padding:clamp(60px,8vw,96px) 0;}
+.section-alt{background:var(--bg-light);padding:clamp(60px,8vw,96px) 0;}
+
+/* Founder card */
+.founder-card{
+  background:#fff;border:1px solid rgba(11,110,253,0.15);
+  border-radius:20px;overflow:hidden;display:grid;
+  grid-template-columns:1fr 1.8fr;gap:0;
+  box-shadow:0 8px 40px rgba(11,110,253,0.1);margin-top:40px;
+}
+.founder-img-side{
+  background:linear-gradient(160deg,var(--blue-dark),var(--blue-deeper));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 30px;text-align:center;
+}
+.founder-avatar{
+  width:120px;height:120px;border-radius:50%;
+  border:3px solid rgba(0,201,200,0.5);
+  background:rgba(0,201,200,0.1);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;
+  overflow:hidden;
+}
+.founder-avatar img{width:100%;height:100%;object-fit:cover;}
+.founder-name{font-family:var(--display);font-size:22px;font-weight:800;color:#fff;margin-bottom:4px;}
+.founder-title{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
+.founder-quote{font-size:14px;color:rgba(255,255,255,0.75);line-height:1.7;font-style:italic;}
+.founder-content{padding:40px;}
+.founder-content h3{font-family:var(--display);font-size:24px;font-weight:800;color:var(--text-dark);margin-bottom:12px;}
+.founder-content p{font-size:15px;color:var(--text-mid);line-height:1.8;margin-bottom:16px;}
+.founder-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
+.ftag{
+  font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;padding:5px 14px;border-radius:20px;
+  background:rgba(11,110,253,0.08);color:var(--blue-dim);
+  border:1px solid rgba(11,110,253,0.2);
+}
+
+/* ─── COMPETITOR TABLE ──────────────── */
+.comp-table-wrap{overflow-x:auto;margin-top:36px;}
+.comp-table{width:100%;border-collapse:collapse;font-size:13px;}
+.comp-table th{
+  background:linear-gradient(135deg,var(--blue-dark),var(--blue-deeper));
+  color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;padding:14px 16px;text-align:left;
+}
+.comp-table td{padding:12px 16px;border-bottom:1px solid rgba(11,110,253,0.08);color:var(--text-mid);font-size:13px;}
+.comp-table tr:last-child td{border-bottom:none;}
+.comp-table .no{color:#dc3545;}
+.comp-table .yes{color:#059669;font-weight:700;}
+.comp-table .highlight-col{background:rgba(11,110,253,0.06);color:var(--blue-dim);font-weight:700;}
+.comp-table thead th:last-child{background:linear-gradient(135deg,var(--blue),var(--accent-dim));color:#fff;}
+
+/* ─── CHARTS ─────────────────────── */
+.charts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;margin-top:36px;}
+.chart-card{
+  background:#fff;border:1px solid rgba(11,110,253,0.12);
+  border-radius:16px;padding:24px;
+}
+.chart-card h4{font-family:var(--display);font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:6px;}
+.chart-card p{font-size:13px;color:var(--text-muted);margin-bottom:20px;}
+.chart-wrap{height:260px;position:relative;}
+
+/* ─── PROCESS ─────────────────────── */
+.process-step{
+  display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,60px);
+  align-items:center;padding:clamp(40px,6vw,70px) 0;
+  border-bottom:1px solid rgba(11,110,253,0.08);
+}
+.process-step:last-child{border-bottom:none;}
+.step-num{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent-dim);margin-bottom:12px;}
+.step-h3{font-family:var(--display);font-size:clamp(20px,2.5vw,28px);font-weight:800;color:var(--text-dark);margin-bottom:16px;line-height:1.25;}
+.step-p{font-size:15px;color:var(--text-mid);line-height:1.8;margin-bottom:16px;}
+.step-img{
+  border-radius:24px;overflow:hidden;
+  height:280px;
+  background:linear-gradient(135deg,var(--bg-section),var(--accent-light));
+  display:flex;align-items:center;justify-content:center;
+}
+.step-img img{width:100%;height:100%;object-fit:cover;}
+.step-img-placeholder{display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px;text-align:center;}
+.step-img-placeholder i{font-size:56px;color:var(--blue);opacity:0.4;}
+.step-img-placeholder span{font-family:var(--mono);font-size:11px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;}
+
+/* ─── PRICING ─────────────────────── */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px;}
+.price-card{
+  background:#fff;border:1px solid rgba(11,110,253,0.15);
+  border-radius:20px;padding:32px;
+  transition:border-color 0.3s,box-shadow 0.3s,transform 0.3s;
+  position:relative;
+}
+.price-card:hover{border-color:rgba(11,110,253,0.4);box-shadow:0 12px 40px rgba(11,110,253,0.12);transform:translateY(-4px);}
+.price-card.featured{border:2px solid var(--blue);box-shadow:0 8px 40px rgba(11,110,253,0.18);}
+.price-badge{
+  position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--blue),var(--accent-dim));
+  color:#fff;font-family:var(--mono);font-size:9px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;padding:4px 16px;border-radius:20px;
+  white-space:nowrap;
+}
+.price-tier{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
+.price-name{font-family:var(--display);font-size:22px;font-weight:800;color:var(--text-dark);margin-bottom:8px;}
+.price-num{font-family:var(--display);font-size:42px;font-weight:800;color:var(--blue-dark);line-height:1;margin:16px 0 4px;}
+.price-num span{font-size:16px;font-weight:600;color:var(--text-muted);}
+.price-period{font-family:var(--mono);font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-bottom:24px;}
+.price-rule{height:1px;background:rgba(11,110,253,0.1);margin-bottom:20px;}
+.price-feature{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text-mid);margin-bottom:12px;line-height:1.5;}
+.price-feature i{color:var(--accent-dim);margin-top:2px;flex-shrink:0;}
+
+/* ─── FAQ ─────────────────────────── */
+.faq-wrap{display:flex;flex-direction:column;gap:12px;}
+.faq-item{background:#fff;border:1px solid rgba(11,110,253,0.12);border-radius:14px;overflow:hidden;}
+.faq-q{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 24px;cursor:pointer;gap:20px;
+  transition:background 0.2s;
+}
+.faq-q:hover{background:rgba(11,110,253,0.04);}
+.faq-q h4{font-family:var(--display);font-size:16px;font-weight:700;color:var(--text-dark);flex:1;line-height:1.35;}
+.faq-icon{font-size:22px;font-weight:300;color:var(--blue);transition:transform 0.3s;flex-shrink:0;}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-a{display:none;padding:0 24px 20px;font-size:14px;color:var(--text-mid);line-height:1.8;border-top:1px solid rgba(11,110,253,0.08);padding-top:16px;}
+.faq-item.open .faq-a{display:block;}
+
+/* ─── CONTACT ─────────────────────── */
+.contact-wrap{display:grid;grid-template-columns:1.4fr 1fr;gap:40px;margin-top:0;}
+.contact-form{background:#fff;border:1px solid rgba(11,110,253,0.15);border-radius:20px;padding:clamp(28px,4vw,40px);}
+.contact-form h3{font-family:var(--display);font-size:24px;font-weight:800;color:var(--text-dark);margin-bottom:8px;}
+.contact-form p{font-size:15px;color:var(--text-muted);margin-bottom:28px;line-height:1.6;}
+.form-group{margin-bottom:20px;}
+.form-group label{display:block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue-dim);margin-bottom:8px;}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:12px 16px;
+  border:1.5px solid rgba(11,110,253,0.2);border-radius:10px;
+  font-family:var(--font);font-size:14px;color:var(--text-dark);
+  background:#fff;transition:border-color 0.2s,box-shadow 0.2s;
+  outline:none;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+  border-color:var(--blue);box-shadow:0 0 0 3px rgba(11,110,253,0.1);
+}
+.form-group textarea{height:120px;resize:vertical;}
+.contact-info{padding:clamp(20px,3vw,36px) 0;}
+.contact-info h3{font-family:var(--display);font-size:22px;font-weight:800;color:var(--text-dark);margin-bottom:12px;}
+.contact-info>p{font-size:15px;color:var(--text-mid);line-height:1.8;margin-bottom:28px;}
+.contact-detail{display:flex;gap:16px;align-items:flex-start;margin-bottom:24px;}
+.contact-detail .icon{
+  width:44px;height:44px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(11,110,253,0.1),rgba(0,201,200,0.1));
+  display:flex;align-items:center;justify-content:center;
+  color:var(--blue);font-size:16px;
+}
+.contact-detail .text strong{display:block;font-size:14px;font-weight:700;color:var(--text-dark);margin-bottom:2px;}
+.contact-detail .text span{font-size:13px;color:var(--text-muted);}
+
+/* ─── FOOTER ─────────────────────── */
+footer{background:var(--footer-bg);padding:clamp(50px,7vw,80px) 0 32px;}
+.footer-grid{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px;}
+.footer-brand{font-family:var(--display);font-size:22px;font-weight:800;color:#fff;margin-bottom:12px;}
+.footer-brand span{color:var(--accent);}
+.footer-desc{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.8;margin-bottom:20px;}
+.footer-badges{display:flex;flex-wrap:wrap;gap:8px;}
+.footer-badge{
+  font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;padding:4px 12px;border-radius:20px;
+  background:rgba(0,201,200,0.12);color:rgba(0,201,200,0.8);
+  border:1px solid rgba(0,201,200,0.2);
+}
+.footer-col-title{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(0,201,200,0.7);margin-bottom:16px;}
+.footer-col{display:flex;flex-direction:column;gap:10px;}
+.footer-col a{font-size:13px;color:rgba(255,255,255,0.55);text-decoration:none;transition:color 0.2s;cursor:pointer;}
+.footer-col a:hover{color:var(--accent);}
+.footer-bottom-bar{
+  border-top:1px solid rgba(255,255,255,0.08);
+  padding-top:28px;display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:12px;
+}
+.footer-bottom-bar p{font-size:12px;color:rgba(255,255,255,0.4);font-family:var(--mono);}
+.footer-bottom-bar p span{color:var(--accent);}
+.footer-bottom-links{display:flex;gap:20px;}
+.footer-bottom-links a{font-size:12px;color:rgba(255,255,255,0.4);text-decoration:none;cursor:pointer;transition:color 0.2s;}
+.footer-bottom-links a:hover{color:var(--accent);}
+
+/* ─── IMPACT STRIP ──────────────────── */
+.impact-strip{
+  background:linear-gradient(135deg,var(--blue-dark),var(--blue-deeper));
+  padding:clamp(50px,7vw,80px) 0;
+}
+.impact-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:40px;}
+.impact-card{
+  background:rgba(255,255,255,0.06);border:1px solid rgba(0,201,200,0.15);
+  border-radius:14px;padding:20px 12px;text-align:center;
+  transition:border-color 0.2s;
+}
+.impact-card:hover{border-color:rgba(0,201,200,0.4);}
+.impact-num{font-family:var(--display);font-size:clamp(20px,2.5vw,32px);font-weight:800;color:var(--accent);margin-bottom:6px;}
+.impact-lbl{font-size:11px;color:rgba(255,255,255,0.7);line-height:1.5;font-family:var(--mono);}
+
+/* ─── INDUSTRIES STRIP ──────────────── */
+.industries-strip{background:var(--bg-light);padding:clamp(50px,6vw,70px) 0;}
+.ind-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:16px;margin-top:32px;}
+.ind-card{
+  background:#fff;border:1px solid rgba(11,110,253,0.12);
+  border-radius:14px;padding:20px 12px;text-align:center;
+  transition:all 0.2s;
+}
+.ind-card:hover{border-color:var(--blue);box-shadow:0 6px 20px rgba(11,110,253,0.12);}
+.ind-card i{font-size:26px;color:var(--blue);margin-bottom:10px;display:block;}
+.ind-card span{font-size:11px;color:var(--text-muted);font-family:var(--mono);letter-spacing:0.5px;line-height:1.4;display:block;}
+
+/* ─── RESPONSIVE ─────────────────────── */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-inner>div:last-child{display:none;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .platform-grid{grid-template-columns:repeat(2,1fr);}
+  .why-grid{grid-template-columns:repeat(2,1fr);}
+  .founder-card{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .charts-grid{grid-template-columns:1fr;}
+  .pricing-grid{grid-template-columns:1fr;}
+  .comp-table{font-size:12px;}
+  .impact-grid{grid-template-columns:repeat(3,1fr);}
+  .ind-grid{grid-template-columns:repeat(4,1fr);}
+  .contact-wrap{grid-template-columns:1fr;}
+  .process-step{grid-template-columns:1fr;}
+  .process-step .step-img{order:-1;}
+  .process-step:nth-child(even) .step-img{order:unset;}
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .btn-demo-nav{display:none;}
+}
+@media(max-width:600px){
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .platform-grid{grid-template-columns:1fr;}
+  .why-grid{grid-template-columns:1fr;}
+  .impact-grid{grid-template-columns:repeat(2,1fr);}
+  .ind-grid{grid-template-columns:repeat(3,1fr);}
+  .hero-btns{flex-direction:column;}
+  .footer-grid{grid-template-columns:1fr;}
+  .pricing-grid{grid-template-columns:1fr;}
+  .founder-card{grid-template-columns:1fr;}
+}
+
+/* ─── NAMED GRID CLASSES for mobile overrides ─── */
+.core-caps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+.vision-mission-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:32px;}
+.one-time-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+
+/* ─── CORE CAPABILITIES / VISION & MISSION / ONE-TIME SERVICES  MOBILE ─── */
+@media(max-width:900px){
+  /* Core Capabilities grid: 2-col on tablet */
+  .core-caps-grid{grid-template-columns:repeat(2,1fr);gap:20px;}
+
+  /* Vision & Mission: 1-col on tablet */
+  .vision-mission-grid{grid-template-columns:1fr;gap:20px;}
+
+  /* One-Time Services: 1-col on tablet */
+  .one-time-grid{grid-template-columns:1fr;gap:20px;}
+  .one-time-grid .price-card{padding:24px!important;}
+  .one-time-grid .price-num{font-size:30px!important;}
+  .one-time-grid .price-name{font-size:17px!important;}
+}
+
+@media(max-width:600px){
+  /* Core Capabilities: 1-col on phone */
+  .core-caps-grid{grid-template-columns:1fr;gap:16px;}
+
+  /* Vision & Mission: already 1-col, just tighten spacing */
+  .vision-mission-grid{gap:16px;margin-top:20px;}
+
+  /* One-Time Services: already 1-col */
+  .one-time-grid{gap:16px;}
+  .one-time-grid .price-card{padding:20px!important;}
+  .one-time-grid .price-num{font-size:28px!important;}
+}
+
+
+@media(max-width:900px){
+
+  /* --- NAVBAR --- */
+  .nav-logo-text{font-size:15px;}
+  .nav-logo-text span{font-size:9px;}
+
+  /* --- HERO --- */
+  .hero{padding:clamp(40px,8vw,70px) 0 clamp(36px,6vw,60px);}
+  h1{font-size:clamp(30px,7vw,48px);letter-spacing:-1px;}
+  .hero-body{font-size:15px;}
+  .hero-mini-stats{gap:10px;}
+  .hero-mini-card{min-width:120px;padding:12px 14px;}
+  .hero-mini-card strong{font-size:19px;}
+  .hero-mini-card span{font-size:10px;}
+
+  /* --- SCORE / DASHBOARD CARD --- */
+  .score-card{padding:18px;}
+  .score-big-num{font-size:38px;}
+  .dashboard-title{font-size:15px;}
+
+  /* --- SECTION HEADINGS --- */
+  .section-h2{font-size:clamp(22px,5vw,36px);}
+
+  /* --- PARA --- */
+  .para-dark,.para-light{font-size:15px;}
+
+  /* --- STATS STRIP --- */
+  .stats-grid{gap:14px;}
+  .stat-num{font-size:clamp(26px,6vw,36px);}
+  .stat-lbl{font-size:12px;}
+  .stat-card{padding:18px 14px;}
+
+  /* --- PLATFORM CARDS --- */
+  .platform-card .inner{padding:18px;}
+  .platform-img-wrap{height:160px;}
+  .platform-card h3{font-size:16px;}
+  .expand-btn{width:100%;text-align:center;padding:10px;}
+
+  /* --- WHY CARDS --- */
+  .why-card{padding:22px 18px;}
+  .why-card h4{font-size:15px;}
+  .why-card p{font-size:13px;}
+
+  /* --- IMPACT STRIP --- */
+  .impact-grid{gap:12px;}
+  .impact-card{padding:16px 8px;}
+  .impact-num{font-size:clamp(18px,4vw,26px);}
+  .impact-lbl{font-size:10px;}
+
+  /* --- INDUSTRIES STRIP --- */
+  .ind-card{padding:16px 8px;}
+  .ind-card i{font-size:22px;}
+  .ind-card span{font-size:10px;}
+
+  /* --- PRICING --- */
+  .price-card{padding:24px 20px;}
+  .price-num{font-size:34px;}
+  .price-name{font-size:19px;}
+  .price-feature{font-size:12px;}
+
+  /* --- FAQ --- */
+  .faq-q{padding:16px 18px;gap:14px;}
+  .faq-q h4{font-size:14px;}
+  .faq-a{padding:0 18px 16px;padding-top:14px;font-size:13px;}
+
+  /* --- CONTACT --- */
+  .contact-form{padding:24px 20px;}
+  .contact-form h3{font-size:20px;}
+  .contact-info h3{font-size:18px;}
+  .form-group input,.form-group select,.form-group textarea{font-size:16px;} /* prevent iOS zoom */
+
+  /* --- PROCESS STEPS --- */
+  .step-img{height:200px;}
+  .step-h3{font-size:clamp(18px,4vw,24px);}
+  .step-p{font-size:14px;}
+
+  /* --- FOUNDER CARD --- */
+  .founder-content{padding:24px 20px;}
+  .founder-content h3{font-size:20px;}
+  .founder-content p{font-size:14px;}
+  .founder-tags{gap:6px;}
+  .ftag{font-size:9px;padding:4px 10px;}
+
+  /* --- COMPETITOR TABLE --- */
+  .comp-table th{font-size:9px;padding:10px 10px;letter-spacing:1px;}
+  .comp-table td{padding:10px 10px;font-size:12px;}
+
+  /* --- CHARTS --- */
+  .chart-card{padding:18px 14px;}
+  .chart-wrap{height:220px;}
+  .chart-card h4{font-size:14px;}
+  .chart-card p{font-size:12px;}
+
+  /* --- FOOTER --- */
+  .footer-grid{gap:28px;}
+  .footer-brand{font-size:19px;}
+  .footer-desc{font-size:12px;}
+  .footer-col a{font-size:12px;}
+  .footer-bottom-bar{flex-direction:column;align-items:flex-start;gap:10px;}
+  .footer-bottom-links{gap:14px;flex-wrap:wrap;}
+  .footer-bottom-links a{font-size:11px;}
+
+  /* --- BUTTONS --- */
+  .btn-primary,.btn-secondary,.btn-white{padding:12px 22px;font-size:11px;}
+  .hero-btns{gap:10px;}
+}
+
+/* ═══════════════════════════════════════
+   SMALL MOBILE (max-width: 480px)
+════════════════════════════════════════ */
+@media(max-width:480px){
+
+  /* --- NAVBAR --- */
+  :root{--nav-h:60px;}
+  .nav-logo-icon{width:34px;height:34px;}
+  .nav-logo-text{font-size:14px;}
+  .nav-logo-text span{display:none;}
+
+  /* --- MOBILE NAV --- */
+  .mobile-nav{padding:10px 16px 18px;}
+  .mobile-nav button{font-size:12px;padding:11px 10px;}
+  .mobile-nav .mob-cta{padding:12px;font-size:11px;}
+
+  /* --- HERO --- */
+  .hero{padding:32px 0 28px;}
+  h1{font-size:clamp(26px,8vw,38px);letter-spacing:-0.5px;}
+  .hero-badge{font-size:9px;padding:5px 12px;}
+  .hero-body{font-size:14px;line-height:1.7;}
+  .hero-mini-stats{gap:8px;margin-top:24px;}
+  .hero-mini-card{min-width:100px;padding:10px 12px;border-radius:10px;}
+  .hero-mini-card strong{font-size:17px;}
+  .hero-mini-card span{font-size:9px;}
+  .hero-rule{margin:14px 0;}
+
+  /* --- HERO BUTTONS --- */
+  .btn-primary,.btn-secondary,.btn-white{
+    width:100%;justify-content:center;
+    padding:13px 18px;font-size:11px;
+  }
+  .hero-btns{flex-direction:column;gap:10px;}
+
+  /* --- SCORE CARD --- */
+  .score-card{padding:16px;}
+  .score-big{padding:12px;gap:12px;}
+  .score-big-num{font-size:32px;}
+  .score-big-info .label{font-size:12px;}
+  .score-big-info .sub{font-size:10px;}
+  .score-lbl{font-size:11px;}
+  .score-val{font-size:11px;}
+  .score-icon{width:28px;height:28px;font-size:8px;}
+  .dashboard-title{font-size:14px;}
+
+  /* --- SECTIONS --- */
+  .section-h2{font-size:clamp(20px,6vw,30px);}
+  .para-dark,.para-light{font-size:14px;line-height:1.75;}
+  .label-tag,.label-tag-white{font-size:9px;letter-spacing:2px;}
+
+  /* --- STATS --- */
+  .stats-grid{grid-template-columns:1fr 1fr;gap:10px;}
+  .stat-card{padding:16px 12px;border-radius:12px;}
+  .stat-num{font-size:clamp(24px,7vw,32px);}
+  .stat-lbl{font-size:11px;line-height:1.5;}
+
+  /* --- PLATFORM CARDS --- */
+  .platform-img-wrap{height:140px;}
+  .platform-card .inner{padding:16px;}
+  .platform-card h3{font-size:15px;margin-bottom:8px;}
+  .platform-card p{font-size:13px;}
+  .element-badge{font-size:8px;}
+  .expand-btn{font-size:9px;padding:9px 14px;}
+
+  /* --- WHY CARDS --- */
+  .why-card{padding:18px 16px;}
+  .why-icon{width:42px;height:42px;font-size:17px;}
+  .why-card h4{font-size:14px;}
+
+  /* --- IMPACT STRIP --- */
+  .impact-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .impact-card{padding:14px 8px;border-radius:12px;}
+  .impact-num{font-size:clamp(17px,5vw,24px);}
+  .impact-lbl{font-size:9px;}
+
+  /* --- INDUSTRIES --- */
+  .ind-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .ind-card{padding:14px 8px;border-radius:12px;}
+  .ind-card i{font-size:20px;margin-bottom:8px;}
+  .ind-card span{font-size:10px;}
+
+  /* --- PRICING --- */
+  .pricing-grid{gap:20px;}
+  .price-card{padding:22px 18px;border-radius:16px;}
+  .price-num{font-size:30px;}
+  .price-name{font-size:17px;}
+  .price-tier{font-size:10px;}
+  .price-feature{font-size:12px;gap:8px;}
+  .price-badge{font-size:8px;padding:3px 12px;}
+
+  /* --- FAQ --- */
+  .faq-q{padding:14px 16px;}
+  .faq-q h4{font-size:13px;line-height:1.4;}
+  .faq-icon{font-size:18px;}
+  .faq-a{padding:0 16px 14px;padding-top:12px;font-size:12px;}
+
+  /* --- CONTACT --- */
+  .contact-form{padding:20px 16px;border-radius:16px;}
+  .contact-form h3{font-size:18px;}
+  .contact-form p{font-size:13px;margin-bottom:20px;}
+  .form-group{margin-bottom:16px;}
+  .form-group label{font-size:9px;}
+  .form-group input,.form-group select,.form-group textarea{
+    padding:11px 14px;font-size:16px;border-radius:8px;
+  }
+  .form-group textarea{height:100px;}
+  .contact-info>p{font-size:14px;}
+  .contact-detail .icon{width:38px;height:38px;font-size:14px;}
+  .contact-detail .text strong{font-size:13px;}
+  .contact-detail .text span{font-size:12px;}
+
+  /* --- PROCESS --- */
+  .process-step{padding:28px 0;gap:20px;}
+  .step-img{height:180px;border-radius:16px;}
+  .step-img-placeholder i{font-size:44px;}
+  .step-h3{font-size:clamp(16px,5vw,22px);}
+  .step-p{font-size:13px;line-height:1.7;}
+  .step-num{font-size:9px;}
+
+  /* --- FOUNDER --- */
+  .founder-img-side{padding:28px 20px;}
+  .founder-avatar{width:90px;height:90px;}
+  .founder-name{font-size:18px;}
+  .founder-title{font-size:9px;}
+  .founder-quote{font-size:12px;}
+  .founder-content{padding:20px 16px;}
+  .founder-content h3{font-size:17px;}
+  .founder-content p{font-size:13px;}
+
+  /* --- COMPETITOR TABLE --- */
+  .comp-table-wrap{-webkit-overflow-scrolling:touch;}
+  .comp-table{min-width:520px;}
+  .comp-table th{font-size:8px;padding:9px 8px;}
+  .comp-table td{padding:9px 8px;font-size:11px;}
+
+  /* --- CHARTS --- */
+  .charts-grid{gap:18px;}
+  .chart-card{padding:16px 12px;}
+  .chart-wrap{height:190px;}
+  .chart-card h4{font-size:13px;}
+
+  /* --- FOOTER --- */
+  footer{padding:clamp(36px,8vw,56px) 0 24px;}
+  .footer-grid{gap:24px;margin-bottom:32px;}
+  .footer-brand{font-size:17px;}
+  .footer-col-title{font-size:9px;}
+  .footer-col{gap:8px;}
+  .footer-badge{font-size:8px;padding:3px 10px;}
+  .footer-bottom-bar{padding-top:20px;}
+  .footer-bottom-bar p{font-size:10px;}
+  .footer-bottom-links{gap:12px;}
+  .footer-bottom-links a{font-size:10px;}
+
+  /* --- RISK BADGES --- */
+  .risk-badge{font-size:9px;padding:3px 8px;}
+
+  /* --- SECTION BLUE --- */
+  .section-blue{padding:clamp(40px,7vw,70px) 0;}
+
+  /* --- SECTION DIVIDER --- */
+  .section-divider{margin:12px 0 20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav class="navbar">
+  <a class="nav-logo" onclick="showPage('home')" href="#">
+    
+    <!-- Logo Removed -->
+
+    <div class="nav-logo-text">
+      PackSure <span style="color:var(--accent);">AI</span>
+      <span>Smart Packs · Safe Deliveries</span>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><button id="nav-home" class="active" onclick="showPage('home')">Home</button></li>
+    <li><button id="nav-about" onclick="showPage('about')">About</button></li>
+    <li><button id="nav-platform" onclick="showPage('platform')">Platform</button></li>
+    <li><button id="nav-market" onclick="showPage('market')">Market</button></li>
+    <li><button id="nav-process" onclick="showPage('process')">How It Works</button></li>
+    <li><button id="nav-pricing" onclick="showPage('pricing')">Pricing</button></li>
+    <li><button id="nav-faq" onclick="showPage('faq')">FAQ</button></li>
+    <li><button id="nav-contact" onclick="showPage('contact')">Contact</button></li>
+  </ul>
+
+  <div class="nav-right">
+    <button class="btn-demo-nav" onclick="showPage('contact')">Book a Demo →</button>
+
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <button onclick="showPage('home');closeMobile()">Home</button>
+  <button onclick="showPage('about');closeMobile()">About</button>
+  <button onclick="showPage('platform');closeMobile()">Platform</button>
+  <button onclick="showPage('market');closeMobile()">Market</button>
+  <button onclick="showPage('process');closeMobile()">How It Works</button>
+  <button onclick="showPage('pricing');closeMobile()">Pricing</button>
+  <button onclick="showPage('faq');closeMobile()">FAQ</button>
+  <button onclick="showPage('contact');closeMobile()">Contact</button>
+  <button class="mob-cta" onclick="showPage('contact');closeMobile()">Book a Demo →</button>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     PAGE : HOME
+════════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          UK's AI-Powered Packaging Intelligence Platform · 2026
+        </div>
+        <h1>
+          See Every <span class="blue">Defect.</span><br>
+          Deliver Every <span class="cyan">Time.</span>
+        </h1>
+        <div class="hero-rule"></div>
+        <p class="hero-body">
+          PackSure AI is an intelligent packaging inspection and optimisation platform that uses computer vision and AI to detect defects, ensure compliance, optimise packaging quality, and reduce wastage across supply chains  turning packaging from a cost centre into a measurable brand asset.
+        </p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="showPage('contact')">Book a Platform Demo</button>
+          <button class="btn-secondary" onclick="showPage('platform')">Explore Platform</button>
+        </div>
+        
+       
+      </div>
+      <!-- LIVE DASHBOARD -->
+      <div>
+        <div class="score-card">
+          <div class="score-card-top">
+            <div>
+              <div class="score-card-label">PackSure AI · Live Engine</div>
+              <h3 class="dashboard-title">Packaging Intelligence Dashboard</h3>
+            </div>
+            <div class="live-dot-wrap"><span class="live-dot"></span>LIVE</div>
+          </div>
+          <div class="score-row">
+            <div class="score-icon blue-bg">DA</div>
+            <span class="score-lbl">Defect Detection Accuracy</span>
+            <span class="score-val">95.4% ↑3.2%</span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon green-bg">PD</div>
+            <span class="score-lbl">Packaging Defects Reduced</span>
+            <span class="score-val">60% ↓ this month</span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon light-bg">MC</div>
+            <span class="score-lbl">Manual Checks Automated</span>
+            <span class="score-val">70%+ automated</span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon blue-bg">EP</div>
+            <span class="score-lbl">EPR Compliance Score</span>
+            <span class="score-val">100% Audit-Ready</span>
+          </div>
+          <div class="score-big">
+            <div class="score-big-num">50<span style="font-size:24px;">%</span></div>
+            <div class="score-big-info">
+              <div class="label">Time Saved in Inspection</div>
+              <div class="sub">AI Vision · Real-Time · ↑12% vs Last Quarter</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS STRIP -->
+  <section class="section-blue">
+    <div class="container">
+      <div class="label-tag-white">The UK Packaging Crisis</div>
+      <h2 class="section-h2 white">UK E-Commerce SMEs Are Losing Billions to<br>Inefficient, Non-Compliant Packaging.</h2>
+      <div class="section-divider divider-white"></div>
+      <p class="para-light" style="max-width:760px;">
+        UK e-commerce and retail sectors face over £2.5 billion in annual losses due to transit damage, delivery refusals, and wasted packaging materials. The Plastic Packaging Tax (£217.85/tonne) and Extended Producer Responsibility mandates are compressing SME margins by up to 30%. PackSure AI is the closed-loop packaging intelligence that turns fragmented procurement into a structured, compliant, and trust-backed delivery system.
+      </p>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num">£2.5B</div>
+          <div class="stat-lbl">Annual losses to UK e-commerce from transit damage, refusals & wasted packaging materials</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">84%</div>
+          <div class="stat-lbl">Of UK supply chains still rely on manual visual checking  an unsustainable bottleneck stifling SME growth</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">71%</div>
+          <div class="stat-lbl">Of UK SMEs lack optimised, fully sustainable packaging integrated into their core logistics and supply chains</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">30%</div>
+          <div class="stat-lbl">Margin erosion for UK SMEs from EPR penalties, plastic tax, and over-packaging due to lack of structural logic</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLATFORM PREVIEW -->
+  <section class="platform-section">
+    <div class="container">
+      <div class="label-tag">Core Intelligence Modules</div>
+      <h2 class="section-h2 dark">Six Capabilities. One Complete AI Packaging OS.</h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark platform-sub">
+        PackSure AI combines Visual Inspection, Print & Label Verification, Seal & Closure Inspection, Dimension & Shape Check, Reporting & Compliance, and System Integration into one unified SaaS platform  no-code, real-time, AI-driven.
+      </p>
+      <div class="platform-grid">
+        <div class="platform-card">
+          <div class="platform-img-wrap">
+            <div class="platform-img-placeholder">
+              <i class="fas fa-eye"></i>
+              <span>Visual Inspection</span>
+            </div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Capability 01</div>
+            <h3>Visual Inspection & Defect Detection</h3>
+            <p>AI-powered inspection for all packaging types and materials  detecting dents, leaks, misprints, seal issues and more in real time with 95%+ accuracy.</p>
+            <div class="more-text">
+              The AI vision engine analyses packaging at line speed, identifying structural failures invisible to the human eye. Using advanced computer vision models trained on UK packaging standards, it classifies defect severity and triggers automated hold or pass decisions  eliminating costly downstream returns and customer refusal summaries.
+            </div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-img-wrap">
+            <div class="platform-img-placeholder">
+              <i class="fas fa-qrcode"></i>
+              <span>Print & Label Verification</span>
+            </div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Capability 02</div>
+            <h3>Print & Label Verification</h3>
+            <p>Verify print quality, labels, barcodes, QR codes and text with AI precision  ensuring regulatory compliance and brand consistency at every production run.</p>
+            <div class="more-text">
+              The Label Intelligence Engine cross-checks printed content against master artwork databases, detecting misprints, colour deviations, barcode readability failures, and missing regulatory statements. It automatically generates EPR-ready compliance records and flags non-conformances before products reach the distribution network.
+            </div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-img-wrap">
+            <div class="platform-img-placeholder">
+              <i class="fas fa-lock"></i>
+              <span>Seal & Closure</span>
+            </div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Capability 03</div>
+            <h3>Seal & Closure Inspection</h3>
+            <p>Detect seal leaks, open seals and closure defects that lead to product contamination, transit failure and costly returns across the supply chain.</p>
+            <div class="more-text">
+              The Seal Integrity Module uses multi-spectral imaging to detect micro-leaks, incomplete seals, and closure torque deviations in real time. Integration with the Transit Failure & Refusal Forensics Engine (TFFE) links seal failure patterns directly to return log data, enabling predictive material adjustments before recurring damage cycles occur.
+            </div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACT STRIP -->
+  <section class="impact-strip">
+    <div class="container">
+      <div class="label-tag-white">Impact That Matters</div>
+      <h2 class="section-h2 white">Measurable Results Across Every Supply Chain.</h2>
+      <div class="section-divider divider-white"></div>
+      <div class="impact-grid">
+        <div class="impact-card">
+          <div class="impact-num">95%+</div>
+          <div class="impact-lbl">Defect Detection Accuracy</div>
+        </div>
+        <div class="impact-card">
+          <div class="impact-num">70%+</div>
+          <div class="impact-lbl">Reduction in Manual Checks</div>
+        </div>
+        <div class="impact-card">
+          <div class="impact-num">60%+</div>
+          <div class="impact-lbl">Decrease in Packaging Defects</div>
+        </div>
+        <div class="impact-card">
+          <div class="impact-num">50%+</div>
+          <div class="impact-lbl">Time Saved in Inspection</div>
+        </div>
+        <div class="impact-card">
+          <div class="impact-num">40%+</div>
+          <div class="impact-lbl">Reduction in Operational Costs</div>
+        </div>
+        <div class="impact-card">
+          <div class="impact-num">100%</div>
+          <div class="impact-lbl">Traceability & Compliance</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INDUSTRIES -->
+  <section class="industries-strip">
+    <div class="container">
+      <div class="label-tag">Trusted Across Industries</div>
+      <h2 class="section-h2 dark">Intelligent Packaging. Stronger Supply Chains.</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="ind-grid">
+        <div class="ind-card"><i class="fas fa-utensils"></i><span>Food &amp; Beverage</span></div>
+        <div class="ind-card"><i class="fas fa-pills"></i><span>Pharma &amp; Healthcare</span></div>
+        <div class="ind-card"><i class="fas fa-shopping-bag"></i><span>Consumer Goods</span></div>
+        <div class="ind-card"><i class="fas fa-store"></i><span>E-Commerce &amp; Retail</span></div>
+        <div class="ind-card"><i class="fas fa-car"></i><span>Automotive</span></div>
+        <div class="ind-card"><i class="fas fa-microchip"></i><span>Electronics</span></div>
+        <div class="ind-card"><i class="fas fa-truck"></i><span>Logistics &amp; Supply Chain</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section class="why-section">
+    <div class="container">
+      <div class="label-tag">Why PackSure AI</div>
+      <h2 class="section-h2 dark">Built for the AI Inspection Era.<br>Not Just a Dashboard with a Vision Badge.</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-robot"></i></div>
+          <h4>AI Vision Inspection</h4>
+          <p>Advanced AI models deliver high-accuracy, real-time defect detection across all packaging types  moving beyond slow, error-prone manual visual inspection processes.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-dna"></i></div>
+          <h4>Packaging DNA Fingerprinting</h4>
+          <p>Captures the structural logic of high-performing packaging designs as proprietary "DNA" assets  ensuring brands never lose critical engineering knowledge when staff or suppliers change.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-shield-alt"></i></div>
+          <h4>Transit Failure Forensics</h4>
+          <p>The TFFE engine analyses return logs to generate automated refusal summaries  pinpointing exactly where packaging failed and recommending material adjustments instantly.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-plug"></i></div>
+          <h4>Supplier-Agnostic Integration</h4>
+          <p>Built to sit above any underlying packaging manufacturer or logistics network  businesses are never locked into a single supplier as sustainable materials evolve.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-leaf"></i></div>
+          <h4>EPR & Sustainability Compliance</h4>
+          <p>Generates audit-ready EPR compliance reports aligned with UK 2025/2026 Extended Producer Responsibility and Plastic Packaging Tax (£217.85/tonne) mandates.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-pound-sign"></i></div>
+          <h4>SME-Optimised SaaS</h4>
+          <p>Tiered subscription from £90/month  giving UK consumer brands and importers enterprise-grade packaging intelligence without enterprise-level consulting costs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end page home -->
+
+
+<!-- ═══════════════════════════════════════
+     PAGE : ABOUT
+════════════════════════════════════════════ -->
+<div class="page" id="page-about">
+  <section class="about-hero">
+    <div class="container">
+      <div class="label-tag">About Us</div>
+      <h2 class="section-h2 dark">Built by an Operations Expert Who Lived the Problem.<br><span style="color:var(--blue-dark);">Designed for the AI Packaging Era.</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:680px;margin-bottom:40px;">PackSure AI is a UK-based SaaS venture founded by Harshal Jadhav  combining deep operational management expertise with a Master of Business & Management from the University of Strathclyde to solve the most pressing challenge facing UK e-commerce today: the "Packaging and Trust Execution Gap" that costs the sector billions in wasted materials, transit failures, and regulatory non-compliance.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Get in Touch</button>
+        <button class="btn-secondary" onclick="showPage('platform')">Explore Platform</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vision & Mission -->
+  <section class="section-light">
+    <div class="container">
+      <div class="label-tag">Vision & Mission</div>
+      <h2 class="section-h2 dark">To Be the Global Standard for<br>"PackOps" Intelligence.</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="why-grid vision-mission-grid">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-eye"></i></div>
+          <h4>Our Vision</h4>
+          <p>We aspire to be the global standard for "PackOps" intelligence, fostering a circular future where brands operate with total structural sovereignty  ensuring every product delivery is sustainable, compliant, and verified with absolute forensic precision.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-bullseye"></i></div>
+          <h4>Our Mission</h4>
+          <p>To empower UK consumer brands, importers, and e-commerce SMEs to eliminate the "Packaging and Trust Execution Gap" by standardising packaging intelligence, automating EPR-ready regulatory compliance, and protecting brand integrity against transit failure and counterfeit risks.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Values -->
+  <section class="section-alt">
+    <div class="container">
+      <div class="label-tag">Core Values</div>
+      <h2 class="section-h2 dark">What Drives Everything We Build</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-leaf"></i></div>
+          <h4>Sustainability</h4>
+          <p>A relentless commitment to minimising the "packaging trust gap" by optimising material usage, eliminating over-packaging, and ensuring circularity in every delivery.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-search"></i></div>
+          <h4>Integrity</h4>
+          <p>A commitment to forensic data transparency  ensuring that every packaging design and anti-counterfeit trust ledger is based on validated structural physics rather than guesswork.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-lock"></i></div>
+          <h4>Sovereignty</h4>
+          <p>Empowering brands to own their "Structural DNA" as a proprietary business asset, ensuring that packaging intelligence remains within the company even through supply chain shifts.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-check-circle"></i></div>
+          <h4>Clarity</h4>
+          <p>Cutting through regulatory complexity by providing automated clarification on EPR compliance  stripping away friction for SMEs to make informed, audit-ready decisions.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-shield-alt"></i></div>
+          <h4>Resilience</h4>
+          <p>Equipping founders with proactive forensics  such as automated customer refusal summary analysis  to transform transit failures into immediate design improvements.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-rocket"></i></div>
+          <h4>Innovation</h4>
+          <p>Continuous refinement of AI vision models, packaging DNA fingerprinting, and structural forensics to stay ahead of the UK's evolving EPR and sustainability mandates.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Founder -->
+  <section class="section-light">
+    <div class="container">
+      <div class="label-tag">Founder Fit</div>
+      <h2 class="section-h2 dark">Harshal Jadhav  Founder & CEO</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="founder-card">
+        <div class="founder-img-side">
+          <div class="founder-avatar">
+            <i class="fas fa-user" style="font-size:54px;color:rgba(0,201,200,0.6);margin-top:20px;"></i>
+          </div>
+          <div class="founder-name">Harshal Jadhav</div>
+          <div class="founder-title">Founder & CEO · PackSure AI</div>
+          <p class="founder-quote">"Better Packaging. Smarter Decisions. Stronger Businesses."</p>
+          <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px;align-items:center;">
+            <span class="footer-badge">M.Sc. University of Strathclyde</span>
+            <span class="footer-badge">Operations & Supply Chain</span>
+            <span class="footer-badge">UK Market Expert</span>
+          </div>
+        </div>
+        <div class="founder-content">
+          <h3>Operational Expertise Meets Packaging Intelligence</h3>
+          <p>Harshal Jadhav possesses a unique background to establish and grow PackSure AI in the UK, drawing on extensive operational experience in multichannel customer operations, high-volume case documentation, and service management within fast-paced retail and logistics-adjacent environments.</p>
+          <p>His career trajectory demonstrates a clear transition from managing complex day-to-day operational workflows to pioneering smart, AI-driven packaging and authentication solutions  providing him with first-hand experience of the "Packaging and Trust Execution Gap" and the costly transit failures that currently plague UK e-commerce SMEs.</p>
+          <p>The motivation for PackSure AI originated from observing that consumer brands and importers consistently struggled with "Packaging Logic Loss"  often choosing packaging through inefficient catalogue-based procurement or trial-and-error, leading to over-packaging, material waste, and high rates of transit-related damage. Harshal's M.Sc. in Business & Management from the University of Strathclyde, combined with his hands-on experience at Wenzel's, provides the analytical and operational foundation to build PackSure AI as a market-defining platform.</p>
+          <div class="founder-tags">
+            <span class="ftag">Multichannel Operations</span>
+            <span class="ftag">SLA Management</span>
+            <span class="ftag">Supply Chain Integrity</span>
+            <span class="ftag">EPR Compliance</span>
+            <span class="ftag">Forensic Analytics</span>
+            <span class="ftag">UK SME Market</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page about -->
+
+
+<!-- ═══════════════════════════════════════
+     PAGE : PLATFORM
+════════════════════════════════════════════ -->
+<div class="page" id="page-platform">
+  <section style="background:linear-gradient(140deg,#EAF1FF 0%,#D6E8FF 50%,#B2F0EF 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">The Platform</div>
+      <h2 class="section-h2 dark">Complete AI-Powered Packaging<br><span style="color:var(--blue-dark);">Inspection & Intelligence.</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:680px;margin-bottom:40px;">PackSure AI unifies Visual Inspection, Print & Label Verification, Seal & Closure Inspection, Dimension & Shape Check, Reporting & Compliance, and System Integration into one closed-loop packaging intelligence platform  purpose-built for UK consumer brands and SME importers.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Request Demo →</button>
+        <button class="btn-secondary" onclick="showPage('pricing')">View Pricing</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 Capabilities -->
+  <section class="section-light">
+    <div class="container">
+      <div class="label-tag">Core Capabilities</div>
+      <h2 class="section-h2 dark">Six Capabilities. Zero Compromise.</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="platform-grid core-caps-grid">
+        <div class="platform-card">
+          <div class="platform-img-wrap">
+            <div class="platform-img-placeholder"><i class="fas fa-eye"></i><span>Visual Inspection</span></div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Core 01</div>
+            <h3>Visual Inspection</h3>
+            <p>AI-powered inspection for all packaging types and materials  identifying defects with precision using advanced computer vision models trained on UK manufacturing data.</p>
+            <div class="more-text">Covers dent detection, surface contamination, shape deformation, colour deviation, and foreign material identification. The AI engine processes thousands of units per minute with 95%+ accuracy, providing real-time pass/fail decisions and defect classification that integrates directly with existing production line systems.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-img-wrap">
+            <div class="platform-img-placeholder"><i class="fas fa-barcode"></i><span>Print & Label</span></div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Core 02</div>
+            <h3>Print & Label Verification</h3>
+            <p>Verify print quality, labels, barcodes, QR codes and text with AI precision against master artwork  ensuring regulatory traceability at every production run.</p>
+            <div class="more-text">The Print Integrity Engine performs automated OCR, barcode grade verification (ISO 15416), colour delta-E measurement, and regulatory text completeness checks. Every label is logged against a tamper-evident audit trail, providing instant EPR-ready compliance documentation for DEFRA reporting requirements.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-img-wrap">
+            <div class="platform-img-placeholder"><i class="fas fa-lock"></i><span>Seal & Closure</span></div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Core 03</div>
+            <h3>Seal & Closure Inspection</h3>
+            <p>Detect seal leaks, open seals and closure defects to prevent product contamination, transit failure and costly downstream returns.</p>
+            <div class="more-text">Multi-spectral imaging detects micro-leaks invisible to human inspection. The Seal Forensics module links closure failure patterns to the Transit Failure & Refusal Forensics Engine (TFFE), allowing the platform to generate automated customer refusal summaries that pinpoint whether damage originated from seal degradation, compression, or humidity drift.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-img-wrap">
+            <div class="platform-img-placeholder"><i class="fas fa-ruler-combined"></i><span>Dimension & Shape</span></div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Core 04</div>
+            <h3>Dimension & Shape Check</h3>
+            <p>Ensure correct dimensions and structural integrity across every product SKU  automatically matching against engineering tolerances without manual measurement.</p>
+            <div class="more-text">3D vision sensors measure length, width, height, and weight deviations in sub-millimetre precision. The Structural DNA Fingerprinting model uses dimensional data as an input variable to assess whether a packaging configuration will survive transit based on historical shipment outcome data, flagging structural risk before dispatch.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-img-wrap">
+            <div class="platform-img-placeholder"><i class="fas fa-file-alt"></i><span>Reporting & Compliance</span></div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Core 05</div>
+            <h3>Reporting & Compliance</h3>
+            <p>Automated reports for audits, EPR compliance, and full packaging traceability  eliminating the manual overhead of regulatory documentation.</p>
+            <div class="more-text">The Compliance Engine automatically generates UK EPR eco-modulation RAG scores, Plastic Packaging Tax (£217.85/tonne) calculations, and recyclability ratings for every packaging design processed. Reports are structured for direct submission to DEFRA, UK EPR Producer Responsibility Obligations, and third-party retail partner audits.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-img-wrap">
+            <div class="platform-img-placeholder"><i class="fas fa-plug"></i><span>System Integration</span></div>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Core 06</div>
+            <h3>System Integration</h3>
+            <p>Easy integration with MES, ERP, PLM and e-commerce platforms  PackSure AI slots into your existing stack without disrupting current operations.</p>
+            <div class="more-text">Pre-built connectors for Shopify, Linnworks, WooCommerce, and major ERP platforms (SAP, Oracle) ensure that packaging intelligence flows directly into existing procurement and fulfilment workflows. A plug-and-play API platform enables configuration within days, not months, reducing onboarding costs and time-to-value for UK SMEs.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Competitor Table -->
+  <section class="section-alt">
+    <div class="container">
+      <div class="label-tag">Competitor Analysis</div>
+      <h2 class="section-h2 dark">Why Competitors Cannot Replicate PackSure AI</h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:700px;margin-bottom:0;">PackSure AI combines closed-loop forensics, proprietary Structural DNA, and UK-specific EPR compliance into one platform  capabilities that siloed competitors simply don't have.</p>
+      <div class="comp-table-wrap">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Feature / Capability</th>
+              <th>Packaging Consultancies</th>
+              <th>B2B Marketplaces</th>
+              <th>Traceability Software</th>
+              <th>PackSure AI</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Closed-Loop Intent-to-Outcome</td><td class="no">No (Project-based)</td><td class="no">No (Catalogue-based)</td><td class="no">No (data exchange only)</td><td class="yes highlight-col">✓ Automated structural logic tracking</td></tr>
+            <tr><td>Predictive Transit Failure Forensics</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="yes highlight-col">✓ TFFE models analyse structural breakdown</td></tr>
+            <tr><td>UK EPR / Plastic Tax Benchmarking</td><td class="no">Manual / Expensive</td><td class="no">No</td><td class="no">No</td><td class="yes highlight-col">✓ Focused UK-compliance RAG logic</td></tr>
+            <tr><td>Packaging DNA Fingerprinting</td><td class="no">Manual audit</td><td class="no">No</td><td class="no">No</td><td class="yes highlight-col">✓ Benchmarking physics / performance</td></tr>
+            <tr><td>Automated Customer Refusal Summary</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="yes highlight-col">✓ Forensics linked to return logs</td></tr>
+            <tr><td>Regulatory Clarification Engine</td><td class="no">Hourly fee</td><td class="no">No</td><td class="no">No</td><td class="yes highlight-col">✓ Mapping client intent to regulatory rules</td></tr>
+            <tr><td>Target Customer</td><td>Global Enterprise</td><td>General SMEs</td><td>Traceability-only firms</td><td class="highlight-col">UK Consumer Brands / Importer SMEs</td></tr>
+            <tr><td>Cost Structure</td><td>High consultancy fee</td><td>Item-based markup</td><td>Subscription / Seat fee</td><td class="highlight-col">SME-optimised SaaS + Compliance ROI</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div><!-- end page platform -->
+
+
+<!-- ═══════════════════════════════════════
+     PAGE : MARKET
+════════════════════════════════════════════ -->
+<div class="page" id="page-market">
+  <section style="background:linear-gradient(140deg,#EAF1FF 0%,#D6E8FF 50%,#B2F0EF 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">Market Analysis</div>
+      <h2 class="section-h2 dark">A £1.2B UK Compliance Market in Crisis.<br><span style="color:var(--blue-dark);">PackSure AI is the Solution.</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:680px;margin-bottom:40px;">The UK packaging compliance market reached £1.2 billion in 2025, fuelled by the Plastic Packaging Tax and Extended Producer Responsibility frameworks. The global sustainable packaging market is valued at USD 275 billion and forecast to reach USD 410 billion by 2030 at a CAGR of 8.3%. PackSure AI targets the UK's 35,000+ e-commerce and consumer import SMEs with AI-driven, affordable structural packaging governance.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Request Demo →</button>
+        <button class="btn-secondary" onclick="showPage('pricing')">View Pricing</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container">
+      <div class="label-tag">Market Data & Intelligence</div>
+      <h2 class="section-h2 dark">The Numbers Behind the Opportunity</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h4>UK Packaging Market by Sector (SAM £M)</h4>
+          <p>Target addressable market across UK consumer sectors requiring packaging intelligence</p>
+          <div class="chart-wrap"><canvas id="chartSector"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>Key Pain Points  UK SME Brand Owners</h4>
+          <p>Primary challenges driving adoption of PackSure AI among UK consumer brands</p>
+          <div class="chart-wrap"><canvas id="chartRootCause"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>PackSure AI vs Competitors  Capability Radar</h4>
+          <p>Platform capabilities vs existing market alternatives across key packaging intelligence dimensions</p>
+          <div class="chart-wrap"><canvas id="chartRadar"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h4>Global Sustainable Packaging Market Growth 2022–2030</h4>
+          <p>Global market growth (USD B) + UK AI packaging adoption trajectory (%)</p>
+          <div class="chart-wrap"><canvas id="chartGrowth"></canvas></div>
+        </div>
+      </div>
+      <div class="charts-grid" style="grid-template-columns:1fr;margin-top:32px;">
+        <div class="chart-card">
+          <h4>Platform Feature Comparison  PackSure AI vs Market Average</h4>
+          <p>Capability scores across key packaging intelligence dimensions (out of 100)</p>
+          <div class="chart-wrap"><canvas id="chartPerf"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Revenue Projections -->
+  <section class="section-blue">
+    <div class="container">
+      <div class="label-tag-white">Financial Projections</div>
+      <h2 class="section-h2 white">3-Year Revenue Trajectory</h2>
+      <div class="section-divider divider-white"></div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num">£87K</div>
+          <div class="stat-lbl">Year 1 Revenue · 75 active brands · London-centric pilots · SaaS subscriptions + onboarding fees</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">£399K</div>
+          <div class="stat-lbl">Year 2 Revenue · 50–100 brands · Full UK launch · £93K net profit · Shopify + ERP integrations</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">£811K</div>
+          <div class="stat-lbl">Year 3 Revenue · 200+ UK brands · £214K net profit · EU pilots · Community Packaging Network scaling</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">20+</div>
+          <div class="stat-lbl">High-value UK-based AI, packaging engineering and operations roles created by Year 5 at platform maturity</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page market -->
+
+
+<!-- ═══════════════════════════════════════
+     PAGE : PROCESS
+════════════════════════════════════════════ -->
+<div class="page" id="page-process">
+  <section style="background:linear-gradient(140deg,#EAF1FF 0%,#D6E8FF 50%,#B2F0EF 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">How It Works</div>
+      <h2 class="section-h2 dark">From Fragmented Procurement<br>to <span style="color:var(--blue-dark);">Closed-Loop Packaging Intelligence</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:680px;margin-bottom:40px;">PackSure AI operates as a closed-loop packaging intelligence lifecycle  capturing, diagnosing, intervening, and continuously evolving your brand's packaging DNA, so every packaging decision is grounded in real AI intelligence, structural physics, and regulatory compliance rather than guesswork or trial-and-error.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('contact')">Request a Demo →</button>
+        <button class="btn-secondary" onclick="showPage('platform')">Explore Capabilities</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-light" style="padding-top:clamp(60px,8vw,96px);">
+    <div class="container">
+      <div class="label-tag">The 6-Phase PackOps Intelligence Lifecycle</div>
+      <h2 class="section-h2 dark">A Complete Packaging Intelligence Loop  Not Just a Defect Scanner</h2>
+      <div class="section-divider divider-blue"></div>
+
+      <!-- Phase 1 -->
+      <div class="process-step">
+        <div>
+          <div class="step-num">Phase 01 · Assess</div>
+          <h3 class="step-h3">Establish Your Packaging DNA Baseline</h3>
+          <p class="step-p">PackSure AI ingests your product data  weight, fragility, dimensions, storage requirements, and route parameters  to build a comprehensive "Packaging Structural Ontology (PSO)." It then runs the first set of structural diagnostics to establish baseline material performance and transit survivability scores.</p>
+          <p class="step-p">The Assessment phase surfaces the hidden cost of unmanaged packaging logic  giving you a precise, data-driven view of your "Packaging Trust Gap" before any material strategy is deployed.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Automated PSO Setup</span>
+            <span class="risk-badge risk-light"><span class="risk-dot"></span>Baseline Structural DNA Report</span>
+            <span class="risk-badge risk-green"><span class="risk-dot"></span>Zero Code Required</span>
+          </div>
+        </div>
+        <div class="step-img">
+          <div class="step-img-placeholder">
+            <i class="fas fa-clipboard-check"></i>
+            <span>Assess · Packaging DNA Baseline</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="process-step">
+        <div class="step-img">
+          <div class="step-img-placeholder">
+            <i class="fas fa-camera"></i>
+            <span>Monitor · AI Vision Inspection</span>
+          </div>
+        </div>
+        <div>
+          <div class="step-num">Phase 02 · Monitor</div>
+          <h3 class="step-h3">Real-Time AI Vision Inspection</h3>
+          <p class="step-p">The AI Inspection Engine ingests live signals from your production line  tracking defect detection rates, seal integrity, label accuracy, and dimensional conformance on a continuous basis. Automated alerts flag non-conformances the moment they emerge.</p>
+          <p class="step-p">Think of it as a 24/7 quality engineer watching every packaging signal  objective, continuous, and immediately actionable.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Live Inspection Dashboard</span>
+            <span class="risk-badge risk-light"><span class="risk-dot"></span>Automated Defect Alerts</span>
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>MES / ERP Integration</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="process-step">
+        <div>
+          <div class="step-num">Phase 03 · Diagnose</div>
+          <h3 class="step-h3">Transit Failure Forensics  Catch Structural Failures Before They Cost You</h3>
+          <p class="step-p">The TFFE engine cross-checks actual defect patterns against structural performance benchmarks. Seal degradation? Compression failure? Humidity drift? The TFFE catches them all and automatically generates an "Automated Customer Refusal Summary" with one-click material adjustment recommendations.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-green"><span class="risk-dot"></span>Automated Failure Detection</span>
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Customer Refusal Summary</span>
+          </div>
+        </div>
+        <div class="step-img">
+          <div class="step-img-placeholder">
+            <i class="fas fa-stethoscope"></i>
+            <span>Diagnose · Transit Forensics</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 4 -->
+      <div class="process-step">
+        <div class="step-img">
+          <div class="step-img-placeholder">
+            <i class="fas fa-cogs"></i>
+            <span>Optimise · Material Synthesis</span>
+          </div>
+        </div>
+        <div>
+          <div class="step-num">Phase 04 · Optimise</div>
+          <h3 class="step-h3">Intent-to-Packaging Auto-Synthesis  Design Cloning at Scale</h3>
+          <p class="step-p">When a structural issue is detected, the Intent-to-Packaging Auto-Synthesis engine automatically deconstructs your product requirements into an EPR-compliant packaging specification. The system recommends precise material combinations validated against transit survivability and carbon rating data.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Automated Material Matching</span>
+            <span class="risk-badge risk-light"><span class="risk-dot"></span>DNA Design Cloning</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 5 -->
+      <div class="process-step">
+        <div>
+          <div class="step-num">Phase 05 · Benchmark</div>
+          <h3 class="step-h3">Community Packaging Network  Learn From the Best</h3>
+          <p class="step-p">The Community Packaging Network (CPN) enables anonymised "Packaging DNA" benchmarks from UK e-commerce brands to improve predictive models continuously. Trends from high-efficiency London-based beauty brands can inform a Manchester-based wellness importer's material strategy without revealing sensitive commercial data.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>Sector-Wide Packaging Insights</span>
+            <span class="risk-badge risk-green"><span class="risk-dot"></span>Privacy-Safe Benchmarking</span>
+          </div>
+        </div>
+        <div class="step-img">
+          <div class="step-img-placeholder">
+            <i class="fas fa-network-wired"></i>
+            <span>Benchmark · Community Network</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 6 -->
+      <div class="process-step">
+        <div class="step-img">
+          <div class="step-img-placeholder">
+            <i class="fas fa-chart-bar"></i>
+            <span>Report · EPR Compliance</span>
+          </div>
+        </div>
+        <div>
+          <div class="step-num">Phase 06 · Report</div>
+          <h3 class="step-h3">EPR-Ready Reporting  From Packaging Data to Regulatory Confidence</h3>
+          <p class="step-p">Every insight is delivered as a prioritised, audit-ready Packaging Performance Report  not raw data exports. Procurement teams receive Structural Integrity Scores, EPR Compliance Ratings, Margin-at-Risk alerts from transit failures, and ranked material action items ready for immediate deployment.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span class="risk-badge risk-blue"><span class="risk-dot"></span>EPR & Compliance Scores</span>
+            <span class="risk-badge risk-light"><span class="risk-dot"></span>Audit-Ready DEFRA Reports</span>
+            <span class="risk-badge risk-green"><span class="risk-dot"></span>Prioritised Action Items</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div><!-- end page process -->
+
+
+<!-- ═══════════════════════════════════════
+     PAGE : PRICING
+════════════════════════════════════════════ -->
+<div class="page" id="page-pricing">
+  <section style="background:linear-gradient(140deg,#EAF1FF 0%,#D6E8FF 50%,#B2F0EF 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">Pricing</div>
+      <h2 class="section-h2 dark">SME-Optimised. Enterprise-Grade.<br><span style="color:var(--blue-dark);">Packaging Intelligence for Every Scale.</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:600px;">55% of UK consumer brands are willing to pay £400–£800 monthly for an all-in-one PackOps platform. PackSure AI delivers that value  starting from just £90/month.</p>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container">
+      <div class="label-tag">Tiered Pricing Structure</div>
+      <h2 class="section-h2 dark">Choose Your PackOps Tier</h2>
+      <div class="section-divider divider-blue"></div>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-tier">Tier 01</div>
+          <div class="price-name">Logic Core</div>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Solo founders & Boutique e-commerce brands</p>
+          <div class="price-num">£90<span>/mo</span></div>
+          <div class="price-period">Monthly · Cancel Anytime</div>
+          <div class="price-rule"></div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>Structural tracking & material library</div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>EPR baseline tracking</div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>Basic regulatory clarification modules</div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>Basic defect detection alerts</div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>Email support</div>
+          <br>
+          <button class="btn-secondary" style="width:100%;justify-content:center;" onclick="showPage('contact')">Get Started →</button>
+        </div>
+        <div class="price-card featured">
+          <div class="price-badge">Most Popular</div>
+          <div class="price-tier">Tier 02</div>
+          <div class="price-name">DNA Architect</div>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">High-volume wellness, beauty & health brands</p>
+          <div class="price-num">£350<span>/mo</span></div>
+          <div class="price-period">Monthly · Cancel Anytime</div>
+          <div class="price-rule"></div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>Full Packaging DNA fingerprinting</div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>Automated regulatory clarification</div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>Eco-modulation EPR scoring</div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>API sync with Shopify / WooCommerce</div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>Visual Inspection AI Module</div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>Priority email & chat support</div>
+          <br>
+          <button class="btn-primary" style="width:100%;justify-content:center;" onclick="showPage('contact')">Book a Demo →</button>
+        </div>
+        <div class="price-card">
+          <div class="price-tier">Tier 03</div>
+          <div class="price-name">Logic Sovereign</div>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Multi-site retail & Import groups</p>
+          <div class="price-num">£800<span>/mo</span></div>
+          <div class="price-period">Monthly · Cancel Anytime</div>
+          <div class="price-rule"></div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>Full Transit Failure & Refusal Forensics (TFFE)</div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>Secure Packaging DNA Nodes</div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>Serialised NFC/QR Trust Ledger</div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>Anti-counterfeit governance index</div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>All Core capabilities + Community Benchmarks</div>
+          <div class="price-feature"><i class="fas fa-check-circle"></i>Dedicated account manager</div>
+          <br>
+          <button class="btn-secondary" style="width:100%;justify-content:center;" onclick="showPage('contact')">Get Started →</button>
+        </div>
+      </div>
+
+      <!-- One-time fees -->
+      <div style="margin-top:40px;">
+        <div class="label-tag">One-Time Services</div>
+        <h3 style="font-family:var(--display);font-size:22px;font-weight:800;color:var(--text-dark);margin-bottom:8px;">Implementation & Audit Services</h3>
+        <div class="section-divider divider-blue" style="margin-bottom:28px;"></div>
+        <div class="one-time-grid">
+          <div class="price-card" style="padding:28px;">
+            <div class="price-tier">Add-On A</div>
+            <div class="price-name" style="font-size:18px;">DNA Onboarding & API Sync</div>
+            <div class="price-num" style="font-size:32px;">£600<span style="font-size:14px;"> one-time</span></div>
+            <div class="price-rule"></div>
+            <div class="price-feature"><i class="fas fa-check-circle"></i>Supply chain mapping & API calibration</div>
+            <div class="price-feature"><i class="fas fa-check-circle"></i>Secure node configuration for platform access</div>
+            <div class="price-feature"><i class="fas fa-check-circle"></i>All firms requiring ERP integration</div>
+          </div>
+          <div class="price-card" style="padding:28px;">
+            <div class="price-tier">Add-On B</div>
+            <div class="price-name" style="font-size:18px;">Forensic Health Assessment</div>
+            <div class="price-num" style="font-size:32px;">£750<span style="font-size:14px;"> one-time</span></div>
+            <div class="price-rule"></div>
+            <div class="price-feature"><i class="fas fa-check-circle"></i>Custom DNA audits of legacy packaging</div>
+            <div class="price-feature"><i class="fas fa-check-circle"></i>Automated customer refusal summary analysis</div>
+            <div class="price-feature"><i class="fas fa-check-circle"></i>Team-wide "PackOps" training</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page pricing -->
+
+
+<!-- ═══════════════════════════════════════
+     PAGE : FAQ
+════════════════════════════════════════════ -->
+<div class="page" id="page-faq">
+  <section style="background:linear-gradient(140deg,#EAF1FF 0%,#D6E8FF 60%,#B2F0EF 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">FAQ</div>
+      <h2 class="section-h2 dark">Frequently Asked Questions</h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:600px;">Everything you need to know about PackSure AI and what it means for your brand's packaging quality, regulatory compliance, and operational efficiency.</p>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container" style="max-width:840px;">
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>What is PackSure AI and why do UK brands need it?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-a">PackSure AI is an AI-powered sustainable packaging and product authentication platform designed to bridge the "Packaging and Trust Execution Gap" for UK SMEs, importers, and consumer brands. By acting as a sophisticated "packaging DNA" layer, the platform synthesises raw product data  weight, fragility, and storage requirements  into optimised, compliant packaging designs. Without it, UK brands face £2.5 billion in annual losses from transit damage, refusals, and regulatory non-compliance.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>What is Packaging DNA Fingerprinting?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-a">Packaging DNA Fingerprinting uses machine learning to identify and "fingerprint" the patterns of successful, highly recyclable material interactions  including tensile strength, barrier performance, carbon rating, and cost-efficiency. This structural logic is stored as a reusable asset, allowing brands to clone high-performing packaging configurations across new SKUs instantly, eliminating "logic loss" when staff or suppliers change.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>How does the Transit Failure & Refusal Forensics Engine (TFFE) work?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-a">The TFFE automatically analyses the delta between intended packaging design specs and real-world carrier return data. When a parcel is returned or refused, the engine processes the return logs, compiles an automated customer refusal summary, and pinpoints exactly where packaging failed  whether due to structural compression, seal degradation, or humidity drift. It then recommends immediate material adjustments to prevent future return cycles.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>How does PackSure AI help with UK EPR compliance?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-a">PackSure AI provides instant regulatory clarification by mapping complex UK eco-modulation and Plastic Packaging Tax frameworks (£217.85/tonne) directly onto packaging specs during the design phase. The platform automatically calculates EPR RAG scores, recyclability ratings, and generates audit-ready DEFRA compliance reports  converting packaging decisions into verifiable regulatory assets rather than manual compliance burdens.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>Can PackSure AI integrate with my existing systems?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-a">Yes. PackSure AI is built with a supplier-agnostic integration architecture. Pre-built connectors are available for Shopify, Linnworks, WooCommerce, and major ERP platforms. The plug-and-play API platform enables configuration within days, not months. The DNA Onboarding & API Sync service ensures seamless supply chain mapping, secure node configuration, and calibration for platform access for all firms requiring ERP integration.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>What is the NFC/QR Trust Ledger and how does it protect my brand?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-a">The Scan-Based Risk & Outcome-Learning Trust Ledger integrates serialised, tamper-evident QR codes and NFC identities directly into packaging designs. As products move through global distribution and are scanned by customers, the platform monitors verification behaviour in real time  identifying counterfeit hotspots, detecting grey-market diversion, and linking security performance back to financial health. This gives SME owners the same multi-layered brand protection used by multinational consumer goods giants.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>Who is PackSure AI built for?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-a">PackSure AI is purpose-built for UK-based e-commerce consumer brands, health & wellness importers, speciality food & gift brands, sustainable e-commerce startups, and founder-led consumer brands. These businesses face the highest risk from "Packaging Logic Loss", rising EPR costs, and transit damage cycles  and currently lack access to enterprise-grade structural engineering without prohibitive consultancy fees.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)"><h4>What results can I expect from a PackSure AI pilot?</h4><span class="faq-icon">+</span></div>
+          <div class="faq-a">Based on pilot research across UK-based specialty e-commerce hubs: 25% average reduction in transit-damage returns within 12 weeks through TFFE-guided material adjustments; 60% reduction in EPR compliance preparation time through automated data synthesis; and new supply chain hires reaching packaging proficiency within 10 days, compared to the industry average of 40 days. 82% of surveyed UK SMEs expressed interest in joining a pilot programme.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page faq -->
+
+
+<!-- ═══════════════════════════════════════
+     PAGE : CONTACT
+════════════════════════════════════════════ -->
+<div class="page" id="page-contact">
+  <section style="background:linear-gradient(140deg,#EAF1FF 0%,#D6E8FF 50%,#B2F0EF 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);">
+    <div class="container">
+      <div class="label-tag">Contact & Demo</div>
+      <h2 class="section-h2 dark">See PackSure AI in Action.<br><span style="color:var(--blue-dark);">Book Your Platform Demo Today.</span></h2>
+      <div class="section-divider divider-blue"></div>
+      <p class="para-dark" style="max-width:600px;">
+        Our personalised demos show your packaging's actual structural baseline, Defect Detection scores, and EPR Compliance ratings  using your real product specifications, not generic examples or static presentations.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-light">
+    <div class="container">
+      <div class="contact-wrap">
+        <!-- FORM -->
+        <div class="contact-form">
+          <h3>Book Your Platform Demo</h3>
+          <p>Fill in your details and our Packaging Success team will contact you within 24 hours.</p>
+          <form action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="YOUR-ACCESS-KEY-HERE">
+            <input type="hidden" name="subject" value="New PackSure AI Demo Request">
+            <input type="hidden" name="from_name" value="PackSure AI Website">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" name="name" placeholder="Your full name" required>
+            </div>
+            <div class="form-group">
+              <label>Email Address *</label>
+              <input type="email" name="email" placeholder="your@company.co.uk" required>
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" name="phone" placeholder="+44 7XXX XXXXXX">
+            </div>
+            <div class="form-group">
+              <label>Company / Brand Name</label>
+              <input type="text" name="company" placeholder="Your company or brand name">
+            </div>
+            <div class="form-group">
+              <label>Business Type</label>
+              <select name="business_type">
+                <option>E-Commerce Consumer Brand</option>
+                <option>Health & Wellness Importer</option>
+                <option>Speciality Food & Gift Brand</option>
+                <option>Pharmaceutical / Healthcare</option>
+                <option>Logistics & Supply Chain</option>
+                <option>Retail / Consumer Goods</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>What are you most interested in?</label>
+              <textarea name="message" placeholder="Tell us about your packaging challenges, current inspection setup, or the capabilities you'd like to explore..." required></textarea>
+            </div>
+            <button class="btn-primary" style="width:100%;justify-content:center;" type="submit">Request Demo →</button>
+          </form>
+        </div>
+
+        <!-- INFO -->
+        <div class="contact-info">
+          <h3>Why Book a Demo?</h3>
+          <p>Our personalised demos show your packaging's actual structural baseline, Defect Detection scores, and EPR Compliance ratings using your real product specifications  not generic examples. We demonstrate how the Packaging DNA Fingerprinting, Transit Failure & Refusal Forensics Engine (TFFE), and Automated EPR Compliance reporting work together to reduce defects, eliminate transit failures, protect margins, and convert packaging from a cost drain into a verifiable brand asset. Every demo is tailored to your product range, supply chain context, and operational challenges.</p>
+          <div class="contact-detail">
+            <div class="icon"><i class="fas fa-envelope"></i></div>
+            <div class="text">
+              <strong>Email Us</strong>
+              <span>hello@packsureai.co.uk</span>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="icon"><i class="fas fa-phone"></i></div>
+            <div class="text">
+              <strong>Phone</strong>
+              <span>+44 XXXX XXXXXX · Harshal Jadhav</span>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="text">
+              <strong>UK Headquarters</strong>
+              <span>London & Glasgow, United Kingdom</span>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="icon"><i class="fas fa-clock"></i></div>
+            <div class="text">
+              <strong>Response Time</strong>
+              <span>Within 24 hours · Mon–Fri 9am–6pm GMT</span>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="icon"><i class="fas fa-shield-alt"></i></div>
+            <div class="text">
+              <strong>Data Privacy</strong>
+              <span>UK GDPR · ICO Compliant · Packaging DNA Secured</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div><!-- end page contact -->
+
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">PackSure <span>AI</span></div>
+        <p class="footer-desc">The UK's AI-powered packaging inspection and optimisation platform  measuring, managing, and governing every packaging decision in real time. Smart Packs. Safe Deliveries. Trusted Always.</p>
+        <div class="footer-badges">
+          <span class="footer-badge">UK GDPR Compliant</span>
+          <span class="footer-badge">ICO Registered</span>
+          <span class="footer-badge">EPR Aligned</span>
+          <span class="footer-badge">Net Zero Committed</span>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Platform</div>
+        <div class="footer-col">
+          <a onclick="showPage('platform')">Visual Inspection</a>
+          <a onclick="showPage('platform')">Print & Label Verification</a>
+          <a onclick="showPage('platform')">Seal & Closure Inspection</a>
+          <a onclick="showPage('platform')">Dimension & Shape Check</a>
+          <a onclick="showPage('platform')">Reporting & Compliance</a>
+          <a onclick="showPage('platform')">System Integration</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <div class="footer-col">
+          <a onclick="showPage('about')">About PackSure AI</a>
+          <a onclick="showPage('about')">Harshal Jadhav · Founder & CEO</a>
+          <a onclick="showPage('process')">How It Works</a>
+          <a onclick="showPage('faq')">FAQ</a>
+          <a onclick="showPage('market')">Market Analysis</a>
+          <a onclick="showPage('pricing')">Pricing & Plans</a>
+          <a onclick="showPage('contact')">Request a Demo</a>
+          <a onclick="showPage('contact')">Pilot Programme</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Solutions</div>
+        <div class="footer-col">
+          <a onclick="showPage('platform')">E-Commerce Consumer Brands</a>
+          <a onclick="showPage('platform')">Health & Wellness Importers</a>
+          <a onclick="showPage('platform')">Pharma & Healthcare</a>
+          <a onclick="showPage('platform')">Food & Beverage</a>
+          <a onclick="showPage('pricing')">Logic Core · £90/mo</a>
+          <a onclick="showPage('pricing')">DNA Architect · £350/mo</a>
+          <a onclick="showPage('pricing')">Logic Sovereign · £800/mo</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom-bar">
+      <p>© 2026 <span>PackSure AI</span> · London & Glasgow, UK · UK GDPR Compliant · by Harshal Jadhav</p>
+      <div class="footer-bottom-links">
+        <a onclick="showPage('contact')">Privacy Policy</a>
+        <a onclick="showPage('contact')">Terms of Service</a>
+        <a onclick="showPage('contact')">Confidential Business Plan</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══ JAVASCRIPT ═══ -->
+<script>
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b=>b.classList.remove('active'));
+  const pg=document.getElementById('page-'+name);
+  if(pg){pg.classList.add('active');}
+  const btn=document.getElementById('nav-'+name);
+  if(btn){btn.classList.add('active');}
+  window.scrollTo({top:0,behavior:'instant'});
+  if(name==='market'&&!window.marketChartsLoaded){initMarketCharts();window.marketChartsLoaded=true;}
+}
+
+function toggleCard(btn){
+  const card=btn.closest('.platform-card');
+  card.classList.toggle('open');
+  btn.innerHTML=card.classList.contains('open')?'Show Less':'Learn More';
+}
+
+function toggleFAQ(el){el.parentElement.classList.toggle('open');}
+
+function closeMobile(){
+  document.getElementById('mobileNav').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+document.getElementById('hamburger').addEventListener('click',function(){
+  this.classList.toggle('open');
+  document.getElementById('mobileNav').classList.toggle('open');
+});
+
+/* Chart colours  PackSure AI Navy/Cyan palette */
+const BLU='rgba(11,110,253,1)';
+const BLU2='rgba(11,110,253,0.7)';
+const BLU3='rgba(11,110,253,0.35)';
+const CYN='rgba(0,201,200,0.85)';
+const CYN2='rgba(0,201,200,0.5)';
+const GRID='rgba(11,110,253,0.08)';
+const MUTED='rgba(26,47,110,0.8)';
+
+Chart.defaults.font.family="'IBM Plex Mono', monospace";
+Chart.defaults.font.size=11;
+Chart.defaults.color=MUTED;
+
+function initMarketCharts(){
+  new Chart(document.getElementById('chartSector').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['Health & Beauty','E-Commerce Retail','Food & Beverage','Pharma / Healthcare'],
+      datasets:[{
+        label:'SAM (£ Millions)',
+        data:[185,145,120,95],
+        backgroundColor:[BLU,BLU2,BLU3,CYN],
+        borderRadius:6,barPercentage:0.6
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:MUTED}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>'£'+v+'M'}}}}
+  });
+
+  new Chart(document.getElementById('chartRootCause').getContext('2d'),{
+    type:'doughnut',
+    data:{
+      labels:['Inconsistent Transit Durability (38%)','EPR Compliance Costs (32%)','No Refusal Summary Visibility (25%)','Trial-and-Error Procurement (45%)','Packaging Logic Loss on Staff Change (34%)'],
+      datasets:[{
+        data:[38,32,25,45,34],
+        backgroundColor:[BLU,BLU2,BLU3,CYN,CYN2],
+        borderColor:['rgba(11,110,253,0.9)','rgba(11,110,253,0.7)','rgba(11,110,253,0.4)','rgba(0,201,200,0.9)','rgba(0,201,200,0.5)'],
+        borderWidth:1.5
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:10,font:{size:10}}}}}
+  });
+
+  new Chart(document.getElementById('chartRadar').getContext('2d'),{
+    type:'radar',
+    data:{
+      labels:['AI Defect Detection','Transit Forensics','EPR Compliance','DNA Fingerprinting','Anti-Counterfeit','UK SME Integration'],
+      datasets:[
+        {label:'PackSure AI',data:[5,5,5,5,5,5],backgroundColor:'rgba(11,110,253,0.1)',borderColor:BLU,borderWidth:2,pointBackgroundColor:BLU},
+        {label:'Packaging Consultancies',data:[2,1,2,1,1,2],backgroundColor:'rgba(0,201,200,0.06)',borderColor:CYN,borderWidth:1.5,pointBackgroundColor:CYN},
+        {label:'B2B Marketplaces',data:[1,1,1,1,1,2],backgroundColor:'rgba(0,201,200,0.04)',borderColor:'rgba(0,201,200,0.5)',borderWidth:1.5,pointBackgroundColor:'rgba(0,201,200,0.5)'},
+        {label:'Traceability Software',data:[1,2,1,1,3,1],backgroundColor:'rgba(26,47,110,0.04)',borderColor:'rgba(26,47,110,0.4)',borderWidth:1.5,pointBackgroundColor:'rgba(26,47,110,0.4)'},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:14,font:{size:10}}}},scales:{r:{backgroundColor:'rgba(11,110,253,0.01)',grid:{color:GRID},pointLabels:{color:MUTED,font:{size:10}},ticks:{display:false},min:0,max:5}}}
+  });
+
+  new Chart(document.getElementById('chartGrowth').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['2022','2023','2024','2025','2026','2027','2028','2030'],
+      datasets:[
+        {label:'Global Sustainable Packaging Market (USD B)',data:[195,220,248,275,305,340,375,410],backgroundColor:BLU2,borderRadius:5,barPercentage:0.55},
+        {type:'line',label:'UK AI Packaging Adoption %',data:[null,3,6,10,18,30,44,65],borderColor:CYN,borderWidth:2,yAxisID:'y2',tension:0.4,pointBackgroundColor:CYN,fill:false}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:12,font:{size:10}}}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>'$'+v+'B'}},y2:{position:'right',grid:{display:false},ticks:{color:MUTED,callback:v=>v+'%'}}}}
+  });
+
+  new Chart(document.getElementById('chartPerf').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['AI Defect Detection','Transit Failure Forensics','EPR Compliance Automation','DNA Fingerprinting','Anti-Counterfeit Trust','UK Regulatory Compliance'],
+      datasets:[
+        {label:'PackSure AI',data:[95,92,98,94,90,98],backgroundColor:BLU2,borderRadius:5,barPercentage:0.35},
+        {label:'Legacy Market Average',data:[5,3,4,2,6,4],backgroundColor:CYN2,borderRadius:5,barPercentage:0.35}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:14,font:{size:10}}}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED,font:{size:9}}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>v+' pts'}}}}
+  });
+}
+</script>
+</body>
+</html>
